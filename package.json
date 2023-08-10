@@ -1,12 +1,17 @@
 {
   "name": "vue3-migrate",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "This is a command-line tool that utilizes ChatGPT to automatically refactor Vue.js code from version 2 to version 3.",
   "main": "index.js",
   "scripts": {
     "prepublish": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "/bin",
+    "/dist",
+    "/README.md"
+  ],
   "bin": {
     "vue3-migrate": "./bin/vue3-migrate"
   },

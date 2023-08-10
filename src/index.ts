@@ -4,6 +4,7 @@ import { program } from 'commander';
 import { join } from 'path';
 import glob from 'glob';
 import { version } from '../package.json';
+import { REFACTOR_PROMPT } from './promt';
 
 const RE_SCRIPT = /(<script lang="ts">.*<\/script>)/s;
 
@@ -93,8 +94,7 @@ async function refactor(
 function getPrompt(options: { [key: string]: string|number }): string {
     let prompt = options.prompt;
     if (!prompt) {
-        const initFilePath = join(__dirname, 'init.md');
-        prompt = fs.readFileSync(initFilePath, 'utf8');
+        prompt = REFACTOR_PROMPT;
     } else {
         prompt = fs.readFileSync(prompt, 'utf8');
     }
