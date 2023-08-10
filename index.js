@@ -86,7 +86,7 @@ async function main() {
             }
             let prompt = options.prompt;
             if (!prompt) {
-                prompt = fs.readFileSync('init.md', 'utf8');
+                prompt = fs.readFileSync('./init.md', 'utf8');
             }
 
             await refactor(filename, model, token, prompt);
@@ -95,7 +95,12 @@ async function main() {
     program.parse(process.argv);
 }
 
-main().catch((error) => {
-    console.error('An error occurred:', error);
-    process.exit(1);
-});
+module.exports = main;
+
+// Run the main function if the file is executed directly
+if (require.main === module) {
+    main().catch((error) => {
+        console.error('An error occurred:', error);
+        process.exit(1);
+    });
+}
