@@ -17,18 +17,23 @@ function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function refactorFilesInDirectory(directory, model, token, prompt, timeout = 20000) {
+async function refactorFilesInDirectory(directory, model, token, prompt, timeout = 20000, max_tokens = 4096) {
     const files = glob.sync(`${directory}/**/*.vue`);
 
     for (const file of files) {
         console.log(`converting file: ${file}`);
-        await refactor(file, model, token, prompt);
+        try {
+            await refactor(file, model, token, prompt, max_tokens);
+        } catch (error) {
+            console.error(`An error occurred while refactoring file: ${file}`);
+            console.error(error);
+        }
         await wait(timeout); // Ожидание перед отправкой следующего запроса
     }
 }
 
 
-async function refactor(filename, model, token, prompt) {
+async function refactor(filename, model, token, prompt, max_tokens = 4096) {
     const content = fs.readFileSync(filename, 'utf8');
 
     // Extract the script tag from <script lang="ts"> to </script>
@@ -50,6 +55,7 @@ async function refactor(filename, model, token, prompt) {
     const openaiInstance = new OpenAIApi(configuration);
     const response = await openaiInstance.createChatCompletion({
         model,
+        max_tokens,
         messages: [
             { role: 'system', content: prompt },
             { role: 'user', content: scriptTag },
@@ -90,13 +96,26 @@ async function main() {
         .description('CLI utilizes ChatGPT to automatically refactor Vue.js code from version 2 to version 3')
         .version(version);
 
-    program.command('directory')
+    function getPrompt(options) {
+        let prompt = options.prompt;
+        if (!prompt) {
+            const initFilePath = join(__dirname, 'init.md');
+            prompt = fs.readFileSync(initFilePath, 'utf8');
+        } else {
+            prompt = fs.readFileSync(prompt, 'utf8');
+        }
+        return prompt;
+    }
+
+    program
+        .command('directory')
         .arguments('<directory>')
         .description('Refactor all Vue files in a directory')
         .option('-m, --model <model>', 'Specify the GPT model', 'gpt-3.5-turbo-16k')
         .option('-t, --token <token>', 'Specify the GPT token', '')
         .option('-t, --prompt <prompt>', 'Start prompt path', '')
         .option('-T, --timeout <timeout>', 'Specify the timeout in milliseconds (default: 20000)', parseInt)
+        .option('-M, --max_tokens <max_tokens>', 'GPT max tokens (default: 4096)', parseInt)
         .action(async (directory, options) => {
             const model = options.model;
             const token = options.token;
@@ -104,16 +123,11 @@ async function main() {
                 console.log('ERR: No token specified, use --token=sk-...');
                 process.exit(1);
             }
-            let prompt = options.prompt;
-            if (!prompt) {
-                const initFilePath = join(__dirname, 'init.md');
-                prompt = fs.readFileSync(initFilePath, 'utf8');
-            } else {
-                prompt = fs.readFileSync(prompt, 'utf8');
-            }
+            const prompt = getPrompt(options);
             const timeout = options.timeout || 20000;
+            const max_tokens = options.max_tokens || 4096;
 
-            await refactorFilesInDirectory(directory, model, token, prompt, timeout);
+            await refactorFilesInDirectory(directory, model, token, prompt, timeout, max_tokens);
         });
 
     program
@@ -123,6 +137,7 @@ async function main() {
         .option('-m, --model <model>', 'Specify the GPT model', 'gpt-3.5-turbo-16k')
         .option('-t, --token <token>', 'Specify the GPT token', '')
         .option('-t, --prompt <prompt>', 'Start prompt path', '')
+        .option('-M, --max_tokens <max_tokens>', 'GPT max tokens (default: 4096)', parseInt)
         .action(async (filename, options) => {
             if (!filename) {
                 console.log('ERR: No file specified');
@@ -134,17 +149,11 @@ async function main() {
                 console.log('ERR: No token specified, use --token=sk-...');
                 process.exit(1);
             }
-            let prompt = options.prompt;
-            if (!prompt) {
-                const initFilePath = join(__dirname, 'init.md');
-                prompt = fs.readFileSync(initFilePath, 'utf8');
-            } else {
-                prompt = fs.readFileSync(prompt, 'utf8');
-            }
+            const prompt = getPrompt(options);
+            const max_tokens = options.max_tokens || 4096;
 
-            await refactor(filename, model, token, prompt);
+            await refactor(filename, model, token, prompt, max_tokens);
         });
-
 
     program.parse(process.argv);
 }
