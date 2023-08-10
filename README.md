@@ -10,6 +10,12 @@ This is a command-line tool that utilizes ChatGPT to automatically refactor Vue.
 
 ## Usage
 
+### Installation
+
+```bash
+npm install -g vue3-migrate
+```
+
 ### Refactor a Single Vue File
 
 To refactor a single Vue file, use the `convert` command:
