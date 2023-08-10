@@ -8,8 +8,19 @@ const { Configuration, OpenAIApi } = require('openai');
 const { program } = require('commander');
 const {join} = require("path");
 // const { HttpsProxyAgent } = require("https-proxy-agent");
+const glob = require('glob');
 
 const RE_SCRIPT = /(<script lang="ts">.*<\/script>)/s;
+
+async function refactorFilesInDirectory(directory, model, token, prompt) {
+    const files = glob.sync(`${directory}/**/*.vue`);
+
+    for (const file of files) {
+        console.log(`converting file: ${file}`);
+        await refactor(file, model, token, prompt);
+    }
+}
+
 
 async function refactor(filename, model, token, prompt) {
     const content = fs.readFileSync(filename, 'utf8');
@@ -69,8 +80,38 @@ async function refactor(filename, model, token, prompt) {
 
 async function main() {
     program
-        .version('1.0.0')
+        .name('vue3-migrate')
+        .description('CLI utilizes ChatGPT to automatically refactor Vue.js code from version 2 to version 3')
+        .version('1.0.0');
+
+    program.command('directory')
+        .arguments('<directory>')
+        .description('Refactor all Vue files in a directory')
+        .option('-m, --model <model>', 'Specify the GPT model', 'gpt-3.5-turbo-16k')
+        .option('-t, --token <token>', 'Specify the GPT token', '')
+        .option('-t, --prompt <prompt>', 'Start prompt path', '')
+        .action(async (directory, options) => {
+            const model = options.model;
+            const token = options.token;
+            if (!token) {
+                console.log('ERR: No token specified, use --token=sk-...');
+                process.exit(1);
+            }
+            let prompt = options.prompt;
+            if (!prompt) {
+                const initFilePath = join(__dirname, 'init.md');
+                prompt = fs.readFileSync(initFilePath, 'utf8');
+            } else {
+                prompt = fs.readFileSync(prompt, 'utf8');
+            }
+
+            await refactorFilesInDirectory(directory, model, token, prompt);
+        });
+
+    program
+        .command('convert')
         .arguments('<filename>')
+        .description('Refactor Vue file in a directory')
         .option('-m, --model <model>', 'Specify the GPT model', 'gpt-3.5-turbo-16k')
         .option('-t, --token <token>', 'Specify the GPT token', '')
         .option('-t, --prompt <prompt>', 'Start prompt path', '')
@@ -95,6 +136,7 @@ async function main() {
 
             await refactor(filename, model, token, prompt);
         });
+
 
     program.parse(process.argv);
 }

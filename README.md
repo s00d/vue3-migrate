@@ -5,24 +5,51 @@ This is a command-line tool that utilizes ChatGPT to automatically refactor Vue.
 
 ## Usage
 
-To use the tool, follow these steps:
+### Refactor a Single Vue File
 
-1. Install the dependencies by running `npm i -g vue3-migrate`.
-2. Run the tool with the following command:
+To refactor a single Vue file, use the `convert` command:
 
+```shell
+$ vue3-migrate convert <filename> [options]
 ```
-$ vue3-migrate <filename> [options]
+
+Replace `<filename>` with the path to the Vue file you want to refactor.
+
+#### Options
+
+- `-m, --model <model>`: Specify the GPT model to use (default: gpt-3.5-turbo-16k)
+- `-t, --token <token>`: Specify the GPT token (required)
+- `-p, --prompt <prompt>`: Specify the path to the prompt file (optional)
+
+### Refactor All Vue Files in a Directory
+
+To refactor all Vue files in a directory, use the `directory` command:
+
+```shell
+$ vue3-migrate directory <directory> [options]
 ```
 
-Replace `<filename>` with the path to your Vue.js file that needs to be refactored.
+Replace `<directory>` with the path to the directory containing the Vue files you want to refactor.
 
-Options:
-- `-m, --model <model>`: Specify the GPT model to use (default: gpt-3.5-turbo-16k).
-- `-t, --token <token>`: Specify the GPT token for authentication.
-- `-p, --prompt <prompt>`: Specify the path to the prompt file (default: init.md).
+#### Options
 
-3. The tool will extract the script tag from your Vue.js file and send it to the ChatGPT model for refactoring.
-4. The refactored code will be saved to a new file with `_refactored` appended to the original filename.
+- `-m, --model <model>`: Specify the GPT model to use (default: gpt-3.5-turbo-16k)
+- `-t, --token <token>`: Specify the GPT token (required)
+- `-p, --prompt <prompt>`: Specify the path to the prompt file (optional)
+
+## Examples
+
+Refactor a single Vue file:
+
+```shell
+$ vue3-migrate convert /path/MyView.vue --token=sk-...
+```
+
+Refactor all Vue files in a directory:
+
+```shell
+$ vue3-migrate directory /path/src/components --token=sk-...
+```
 
 ## Configuration
 
@@ -30,16 +57,6 @@ Before running the tool, make sure to set up the following:
 
 1. Obtain a GPT token from OpenAI. You can sign up for an API key at https://openai.com/.
 2. Create a prompt file (default: init.md) that contains the instructions for the refactoring process. This file should specify the rules and guidelines for the refactoring.
-
-## Example
-
-Here's an example usage of the tool:
-
-```
-$ vue3-migrate /path/MyView.vue -m gpt-4.0-turbo -t sk-abc123xyz -p prompt.md
-```
-
-This will refactor the code in `MyView.vue` using the `gpt-4.0-turbo` model, the specified GPT token, and the prompt instructions from `prompt.md`.
 
 ## Notes
 
