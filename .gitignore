@@ -55,3 +55,4 @@ resources/assets/js/_static/sprite-*
 /public_html/assets/sprites_big/
 .phpunit.result.cache
 /storage/app/ru.json
+dist
