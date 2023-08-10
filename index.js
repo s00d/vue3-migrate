@@ -3,28 +3,14 @@
 
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
-require('dotenv').config()
-
 const fs = require('fs');
 const { Configuration, OpenAIApi } = require('openai');
 const { program } = require('commander');
 // const { HttpsProxyAgent } = require("https-proxy-agent");
 
-const openaiApiKey = process.env.OPENAI_APIKEY;
-if (!openaiApiKey) {
-    console.log('ERR: OPENAI_APIKEY environment variable is not set');
-    process.exit(1);
-}
-
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_APIKEY,
-});
-
-const REFACTOR_PROMPT = fs.readFileSync('init.md', 'utf8');
-
 const RE_SCRIPT = /(<script lang="ts">.*<\/script>)/s;
 
-async function refactor(filename, model) {
+async function refactor(filename, model, token, prompt) {
     const content = fs.readFileSync(filename, 'utf8');
 
     // Extract the script tag from <script lang="ts"> to </script>
@@ -39,11 +25,15 @@ async function refactor(filename, model) {
 
     // Ask for refactoring
     // const agent = new HttpsProxyAgent('http://127.0.0.1:4034');
+    const configuration = new Configuration({
+        apiKey: token,
+    });
+
     const openaiInstance = new OpenAIApi(configuration);
     const response = await openaiInstance.createChatCompletion({
         model,
         messages: [
-            { role: 'system', content: REFACTOR_PROMPT },
+            { role: 'system', content: prompt },
             { role: 'user', content: scriptTag },
         ],
     },
@@ -73,20 +63,33 @@ async function refactor(filename, model) {
     console.log(`Refactored code saved to ${newFilename}`);
 }
 
+
+// const REFACTOR_PROMPT = fs.readFileSync('init.md', 'utf8');
+
 async function main() {
     program
         .version('1.0.0')
         .arguments('<filename>')
         .option('-m, --model <model>', 'Specify the GPT model', 'gpt-3.5-turbo-16k')
+        .option('-t, --token <token>', 'Specify the GPT token', '')
+        .option('-t, --prompt <prompt>', 'Start prompt path', '')
         .action(async (filename, options) => {
-            const model = options.model;
-
             if (!filename) {
                 console.log('ERR: No file specified');
                 process.exit(1);
             }
+            const model = options.model;
+            const token = options.token;
+            if (!token) {
+                console.log('ERR: No token specified, use --token=sk-...');
+                process.exit(1);
+            }
+            let prompt = options.prompt;
+            if (!prompt) {
+                prompt = fs.readFileSync('init.md', 'utf8');
+            }
 
-            await refactor(filename, model);
+            await refactor(filename, model, token, prompt);
         });
 
     program.parse(process.argv);
