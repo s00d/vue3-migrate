@@ -51,7 +51,7 @@ class RefactorEngine {
 
         // Check if the file already exists
         if (fs.existsSync(newFilename)) {
-            console.log(`File ${newFilename} already exists. Skipping...`);
+            console.error(`File ${newFilename} already exists. Skipping...`);
             return;
         }
 
@@ -61,13 +61,13 @@ class RefactorEngine {
         // Extract the script tag from <script lang="ts"> to </script>
         const match = content.match(RE_SCRIPT);
         if (!match) {
-            console.log('ERR: No script tag found');
+            console.error('ERR: No script tag found');
             process.exit(1);
         }
         const [scriptTag] = match;
         const spanstart = match.index;
         if (spanstart === undefined) {
-            console.log('ERR: Unable to determine script tag index');
+            console.error('ERR: Unable to determine script tag index');
             process.exit(1);
         }
         const spanend = spanstart + scriptTag.length;
@@ -107,7 +107,6 @@ class RefactorEngine {
         fs.writeFileSync(newFilename, refactoredContent, 'utf8');
 
         console.log(`Refactored code saved to ${newFilename}`);
-
 
         const time = Date.now() - start;
         this.metrics.push({ file: filename, old_length: old_len, new_length: length, time });
