@@ -113,9 +113,9 @@ async function main() {
         .description('Refactor all Vue files in a directory')
         .option('-m, --model <model>', 'Specify the GPT model', 'gpt-3.5-turbo-16k')
         .option('-t, --token <token>', 'Specify the GPT token', '')
-        .option('-t, --prompt <prompt>', 'Start prompt path', '')
-        .option('-T, --timeout <timeout>', 'Specify the timeout in milliseconds (default: 20000)', parseInt)
-        .option('-M, --max_tokens <max_tokens>', 'GPT max tokens (default: 4096)', parseInt)
+        .option('-p, --prompt <prompt>', 'Start prompt path', '')
+        .option('-t, --timeout <timeout>', 'Specify the timeout in milliseconds (default: 20000)', parseInt)
+        .option('-mt, --max_tokens <max_tokens>', 'GPT max tokens (default: 4096)', parseInt)
         .action(async (directory, options) => {
             const model = options.model;
             const token = options.token;
@@ -136,8 +136,8 @@ async function main() {
         .description('Refactor Vue file in a directory')
         .option('-m, --model <model>', 'Specify the GPT model', 'gpt-3.5-turbo-16k')
         .option('-t, --token <token>', 'Specify the GPT token', '')
-        .option('-t, --prompt <prompt>', 'Start prompt path', '')
-        .option('-M, --max_tokens <max_tokens>', 'GPT max tokens (default: 4096)', parseInt)
+        .option('-p, --prompt <prompt>', 'Start prompt path', '')
+        .option('-MT, --max_tokens <max_tokens>', 'GPT max tokens (default: 4096)', parseInt)
         .action(async (filename, options) => {
             if (!filename) {
                 console.log('ERR: No file specified');
