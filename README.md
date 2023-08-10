@@ -1,3 +1,8 @@
+[![npm version](https://badge.fury.io/js/vue3-migrate.svg)](https://badge.fury.io/js/vue3-migrate)
+[![npm downloads](https://img.shields.io/npm/dw/vue3-migrate)](https://badge.fury.io/js/vue3-migrate)
+[![NPM license](https://img.shields.io/npm/l/vue3-migrate)](https://github.com/s00d/vue3-migrate/blob/master/LICENSE)
+[![donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.me/s00d)
+[![GitHub Repo stars](https://img.shields.io/github/stars/s00d/vue3-migrate?style=social)](https://github.com/s00d/vue3-migrate)
 
 # Vue.js Code Migration Tool
 
