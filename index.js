@@ -9,15 +9,21 @@ const { program } = require('commander');
 const {join} = require("path");
 // const { HttpsProxyAgent } = require("https-proxy-agent");
 const glob = require('glob');
+const { version } = require('./package.json');
 
 const RE_SCRIPT = /(<script lang="ts">.*<\/script>)/s;
 
-async function refactorFilesInDirectory(directory, model, token, prompt) {
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function refactorFilesInDirectory(directory, model, token, prompt, timeout = 20000) {
     const files = glob.sync(`${directory}/**/*.vue`);
 
     for (const file of files) {
         console.log(`converting file: ${file}`);
         await refactor(file, model, token, prompt);
+        await wait(timeout); // Ожидание перед отправкой следующего запроса
     }
 }
 
@@ -82,7 +88,7 @@ async function main() {
     program
         .name('vue3-migrate')
         .description('CLI utilizes ChatGPT to automatically refactor Vue.js code from version 2 to version 3')
-        .version('1.0.0');
+        .version(version);
 
     program.command('directory')
         .arguments('<directory>')
@@ -90,6 +96,7 @@ async function main() {
         .option('-m, --model <model>', 'Specify the GPT model', 'gpt-3.5-turbo-16k')
         .option('-t, --token <token>', 'Specify the GPT token', '')
         .option('-t, --prompt <prompt>', 'Start prompt path', '')
+        .option('-T, --timeout <timeout>', 'Specify the timeout in milliseconds (default: 20000)', parseInt)
         .action(async (directory, options) => {
             const model = options.model;
             const token = options.token;
@@ -104,8 +111,9 @@ async function main() {
             } else {
                 prompt = fs.readFileSync(prompt, 'utf8');
             }
+            const timeout = options.timeout || 20000;
 
-            await refactorFilesInDirectory(directory, model, token, prompt);
+            await refactorFilesInDirectory(directory, model, token, prompt, timeout);
         });
 
     program

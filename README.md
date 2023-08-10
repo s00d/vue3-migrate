@@ -36,6 +36,7 @@ Replace `<directory>` with the path to the directory containing the Vue files yo
 - `-m, --model <model>`: Specify the GPT model to use (default: gpt-3.5-turbo-16k)
 - `-t, --token <token>`: Specify the GPT token (required)
 - `-p, --prompt <prompt>`: Specify the path to the prompt file (optional)
+- `-p, --timeout <timeout>`: The `timeout` option allows you to specify the timeout duration in milliseconds between each refactoring request when using the `directory` command. It determines the waiting time before sending the next request to the OpenAI API. By default, the timeout is set to 20000 milliseconds (20 seconds).
 
 ## Examples
 
