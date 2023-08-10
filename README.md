@@ -68,7 +68,7 @@ $ vue3-migrate directory /path/src/components --token=sk-...
 Before running the tool, make sure to set up the following:
 
 1. Obtain a GPT token from OpenAI. You can sign up for an API key at https://openai.com/.
-2. Create a prompt text file (md for example, default: promt.ts) that contains the instructions for the refactoring process. This file should specify the rules and guidelines for the refactoring.
+2. Create a prompt text file (md for example, default: prompt.md) that contains the instructions for the refactoring process. This file should specify the rules and guidelines for the refactoring.
 
 ## Notes
 

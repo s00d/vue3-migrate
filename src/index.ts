@@ -2,8 +2,9 @@ import fs from 'fs';
 import { Configuration, OpenAIApi } from 'openai';
 import { program } from 'commander';
 import glob from 'glob';
-import { version } from '../package.json';
 import {getPrompt, getToken, wait} from "./helpers";
+
+const { version } = require('../package.json')
 
 const RE_SCRIPT = /(<script lang="ts">.*<\/script>)/s;
 

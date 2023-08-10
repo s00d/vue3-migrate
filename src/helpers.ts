@@ -1,10 +1,11 @@
 import fs from "fs";
-import REFACTOR_PROMPT from "./promt";
+import path from "path";
 
 export function getPrompt(options: { [key: string]: string|number }): string {
     let prompt = options.prompt;
     if (!prompt) {
-        prompt = REFACTOR_PROMPT;
+        const initFilePath = path.join(__dirname, '..', 'prompt.md');
+        prompt = fs.readFileSync(initFilePath, 'utf8');
     } else {
         prompt = fs.readFileSync(prompt, 'utf8');
     }

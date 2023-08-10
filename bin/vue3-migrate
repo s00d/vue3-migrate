@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const main = require('../dist/src/index.js').default;
+const main = require('../dist/index.js').default;
 
 main().catch((error) => {
     console.error('An error occurred:', error);
