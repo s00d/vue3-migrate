@@ -7,7 +7,7 @@ This is a command-line tool that utilizes ChatGPT to automatically refactor Vue.
 
 To use the tool, follow these steps:
 
-1. Install the dependencies by running `npm install`.
+1. Install the dependencies by running `npm i -g vue3-migrate`.
 2. Run the tool with the following command:
 
 ```
