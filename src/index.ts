@@ -1,16 +1,11 @@
 import fs from 'fs';
 import { Configuration, OpenAIApi } from 'openai';
 import { program } from 'commander';
-import { join } from 'path';
 import glob from 'glob';
 import { version } from '../package.json';
-import { REFACTOR_PROMPT } from './promt';
+import {getPrompt, getToken, wait} from "./helpers";
 
 const RE_SCRIPT = /(<script lang="ts">.*<\/script>)/s;
-
-function wait(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 async function refactorFilesInDirectory(
     directory: string,
@@ -89,25 +84,6 @@ async function refactor(
     fs.writeFileSync(newFilename, refactoredContent, 'utf8');
 
     console.log(`Refactored code saved to ${newFilename}`);
-}
-
-function getPrompt(options: { [key: string]: string|number }): string {
-    let prompt = options.prompt;
-    if (!prompt) {
-        prompt = REFACTOR_PROMPT;
-    } else {
-        prompt = fs.readFileSync(prompt, 'utf8');
-    }
-    return prompt.toString();
-}
-
-function getToken(options: { [key: string]: string|number }): string {
-    const token = options.token;
-    if (!token) {
-        console.log('ERR: No token specified, use --token=sk-...');
-        process.exit(1);
-    }
-    return token.toString()
 }
 
 async function main(): Promise<void> {
