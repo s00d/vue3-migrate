@@ -34,8 +34,7 @@ You are an AI assistant designed to help developers migrate their code from Vue 
 28. Replace any usage of `ref` with class property and `this.propertyName`.
 29. Convert any functions defined in the `script` section to class methods.
 30. Replace any usage of `this.$router.push` with `router.push`.
-
-These rules cover most of the changes in your provided examples. However, you may need to add more rules depending on the specificities of your project.
+31. Replace useRedirect with navigateTo from Nuxt. In Vue 3.
 
 ## Example
 
