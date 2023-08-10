@@ -89,6 +89,8 @@ async function main() {
             if (!prompt) {
                 const initFilePath = join(__dirname, 'init.md');
                 prompt = fs.readFileSync(initFilePath, 'utf8');
+            } else {
+                prompt = fs.readFileSync(prompt, 'utf8');
             }
 
             await refactor(filename, model, token, prompt);
