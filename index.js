@@ -137,7 +137,7 @@ async function main() {
         .option('-m, --model <model>', 'Specify the GPT model', 'gpt-3.5-turbo-16k')
         .option('-t, --token <token>', 'Specify the GPT token', '')
         .option('-p, --prompt <prompt>', 'Start prompt path', '')
-        .option('-MT, --max_tokens <max_tokens>', 'GPT max tokens (default: 4096)', parseInt)
+        .option('-mt, --max_tokens <max_tokens>', 'GPT max tokens (default: 4096)', parseInt)
         .action(async (filename, options) => {
             if (!filename) {
                 console.log('ERR: No file specified');
