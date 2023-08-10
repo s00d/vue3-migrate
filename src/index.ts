@@ -47,6 +47,14 @@ class RefactorEngine {
     }
 
     async refactor(filename: string): Promise<void> {
+        const newFilename = filename.replace('.vue', '_refactored.vue');
+
+        // Check if the file already exists
+        if (fs.existsSync(newFilename)) {
+            console.log(`File ${newFilename} already exists. Skipping...`);
+            return;
+        }
+
         const start = Date.now();
         const content = fs.readFileSync(filename, 'utf8');
 
@@ -96,7 +104,6 @@ class RefactorEngine {
         refactoredContent += content.slice(spanend);
 
         // Save the refactored content to a new file
-        const newFilename = filename.replace('.vue', '_refactored.vue');
         fs.writeFileSync(newFilename, refactoredContent, 'utf8');
 
         console.log(`Refactored code saved to ${newFilename}`);
