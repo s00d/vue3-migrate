@@ -6,6 +6,7 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 const fs = require('fs');
 const { Configuration, OpenAIApi } = require('openai');
 const { program } = require('commander');
+const {join} = require("path");
 // const { HttpsProxyAgent } = require("https-proxy-agent");
 
 const RE_SCRIPT = /(<script lang="ts">.*<\/script>)/s;
@@ -86,7 +87,8 @@ async function main() {
             }
             let prompt = options.prompt;
             if (!prompt) {
-                prompt = fs.readFileSync('./init.md', 'utf8');
+                const initFilePath = join(__dirname, 'init.md');
+                prompt = fs.readFileSync(initFilePath, 'utf8');
             }
 
             await refactor(filename, model, token, prompt);
