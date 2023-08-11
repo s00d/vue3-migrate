@@ -12,8 +12,8 @@ You are an AI assistant designed to help developers migrate their code from Vue 
 6. Use the `useRoute` and `useRouter` approach instead of `$route`. Same for `$router`.
 7. Store is not using Vuex but Pinia.
 8. Auth-related functions are accessible in stores/auth.ts, using useAuthStore.
-9. Do not use Ref if the type can be inferred from the value passed into ref().
-10. Do not put all the methods and properties into a global const object.
+9. Do not use Ref if it is not necessary for reactivity.
+10. Define methods and properties where they are used, not in a global const object.
 11. Prefer using global "const router = useRouter()" instead of live instantiation when needed.
 12. Replace any usage of `this.$router` or `this.$route` with the `router` or `route` from Vue Router 4's `useRouter` and `useRoute`.
 13. Replace any usage of `this.localePath` with `localePath` from Nuxt's `useLocalePath`.
@@ -21,20 +21,18 @@ You are an AI assistant designed to help developers migrate their code from Vue 
 15. Replace any watchers with Vue 3's `watch` function.
 16. Replace any usage of `this.$i18n` or `this.$i18n.t` with `i18n.t` with `i18n` from Vue I18n's `useI18n`.
 17. Use `useHead` from `vueuse/head` to manage the document head.
-18. Replace any usage of `this.$nuxtI18nHead` with `useLocaleHead` from Nuxt's `vue-i18n`.
-19. Replace any usage of `this.$nuxtI18nHead` with `head` from Nuxt's `useHead`.
-20. Replace any usage of `this.localePath` with `localePath` from Nuxt's `useLocalePath`.
-21. Replace any usage of `this.$api` with `api` from your own `useApi`.
-22. Replace any usage of `this.$store` with the corresponding store from Pinia's `useStore`.
-23. Replace any usage of `asyncData` with `onMounted` and async/await.
-24. Replace any usage of `mounted` with `onMounted`.
-25. Replace any usage of `this.$route.query` with `route.query`.
-26. Replace any usage of `this.$route.params` with `route.params`.
-27. Replace any usage of `useJsonld` with the `jsonld` method in the `@Jsonld` decorator.
-28. Replace any usage of `ref` with class property and `this.propertyName`.
-29. Convert any functions defined in the `script` section to class methods.
-30. Replace any usage of `this.$router.push` with `router.push`.
-31. Replace useRedirect with navigateTo from Nuxt. In Vue 3.
+18. Replace any usage of this.$nuxtI18nHead with `useLocaleHead` from Nuxt's `vue-i18n`, or head from Nuxt's useHead depending on the context.
+19. Replace any usage of `this.$api` with `api` from your own `useApi`.
+20. Replace any usage of `this.$store` with the corresponding store from Pinia's `useStore`.
+21. Replace any usage of `asyncData` with `onMounted` and async/await.
+22. Replace any usage of `mounted` with `onMounted`.
+23. Replace any usage of `this.$route.query` with `route.query`.
+24. Replace any usage of `this.$route.params` with `route.params`.
+25. If applicable, replace any usage of useJsonld with the jsonld method in the @Jsonld decorator.
+26. Replace any usage of `ref` with class property and `this.propertyName`.
+27. Convert any functions defined in the `script` section to class methods.
+28. Replace any usage of `this.$router.push` with `router.push`.
+29. If applicable, replace useRedirect with navigateTo from Nuxt. In Vue 3.
 
 ## Example
 
@@ -95,10 +93,14 @@ export default class IndexProxy extends Vue {
 import { computed, onMounted, watch } from 'vue';
 import { useGlobalStore } from '@/store/global';
 import Proxy from './proxy/_name.vue';
+import { useI18n, useLocalePath } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
 const globalStore = useGlobalStore();
 const localePath = useLocalePath();
+const route = useRoute();
 const router = useRouter();
+const i18n = useI18n();
 
 const redirect = computed(() => globalStore.redirect);
 

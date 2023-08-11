@@ -32,6 +32,7 @@ Replace `<filename>` with the path to the Vue file you want to refactor.
 - `-m, --model <model>`: Specify the GPT model to use (default: gpt-3.5-turbo-16k, optional)
 - `-p, --prompt <prompt>`: Specify the path to the prompt file (optional)
 - `-mt, --max_tokens <max_tokens>`: The GPT max tokens (default: 4096, optional).
+- `-r, --replace`: replace exist refactor files.
 
 see help: `vue3-migrate convert -h`
 
@@ -52,6 +53,7 @@ Replace `<directory>` with the path to the directory containing the Vue files yo
 - `-p, --prompt <prompt>`: Specify the path to the prompt file (optional)
 - `-t, --timeout <timeout>`: The `timeout` option allows you to specify the timeout duration in milliseconds between each refactoring request when using the `directory` command. It determines the waiting time before sending the next request to the OpenAI API (default: 20 seconds, optional).
 - `-mt, --max_tokens <max_tokens>`: The GPT max tokens (default: 4096, optional).
+- `-r, --replace`: replace exist refactor files.
 
 see help: `vue3-migrate convert -h`
 
