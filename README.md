@@ -6,6 +6,10 @@
 
 # Vue.js Code Migration Tool
 
+<p align="center">
+<img src="https://github.com/s00d/vue3-migrate/blob/main/Screenshot.png?raw=true" alt="logo">
+</p>
+
 This is a command-line tool that utilizes ChatGPT to automatically refactor Vue.js code from version 2 to version 3. It helps developers migrate their code by transforming it to use Typescript with the Composition API.
 
 ## Usage
